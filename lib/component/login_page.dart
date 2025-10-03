@@ -44,53 +44,54 @@ class _AnimatedLoginPageState extends State<AnimatedLoginPage>
     String username = _usernameController.text.trim();
     String password = _passwordController.text.trim();
 
-    if (username.isEmpty || password.isEmpty) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Please fill all fields")));
-      return;
-    }
+    // if (username.isEmpty || password.isEmpty) {
+    //   ScaffoldMessenger.of(context)
+    //       .showSnackBar(SnackBar(content: Text("Please fill all fields")));
+    //   return;
+    // }
 
     setState(() {
       _isLoading = true;
     });
+    Navigator.pushReplacementNamed(context, '/home');
 
-    try {
-      final response = await http.post(
-        Uri.parse('https://stagev2cmsapi.satyahindi.com/v1/auth/login'),
-        headers: {
-          'Content-Type': 'application/json',
-          'source': 'web-admin',
-        },
-        body: jsonEncode({
-          "username": username,
-          "password": password,
-          "keepmeLoggedIn": rememberMe,
-        }),
-      );
+    // try {
+    //   final response = await http.post(
+    //     Uri.parse('https://stagev2cmsapi.satyahindi.com/v1/auth/login'),
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //       'source': 'web-admin',
+    //     },
+    //     body: jsonEncode({
+    //       "username": username,
+    //       "password": password,
+    //       "keepmeLoggedIn": rememberMe,
+    //     }),
+    //   );
 
-      setState(() {
-        _isLoading = false;
-      });
+    //   setState(() {
+    //     _isLoading = false;
+    //   });
 
-      if (response.statusCode == 200) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text("Login Successful!")));
+    //   if (response.statusCode == 200) {
+    //     ScaffoldMessenger.of(context)
+    //         .showSnackBar(SnackBar(content: Text("Login Successful!")));
 
-        // Navigate using route name
-        Navigator.pushReplacementNamed(context, '/home');
-      } else {
-        final resBody = jsonDecode(response.body);
-        String message = resBody['message'] ?? "Invalid Credentials";
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(message)));
-      }
-    } catch (e) {
-      setState(() {
-        _isLoading = false;
-      });
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Error: $e")));
-    }
+    //     // Navigate using route name
+    //     Navigator.pushReplacementNamed(context, '/home');
+    //   } else {
+    //     final resBody = jsonDecode(response.body);
+    //     String message = resBody['message'] ?? "Invalid Credentials";
+    //     ScaffoldMessenger.of(context)
+    //         .showSnackBar(SnackBar(content: Text(message)));
+    //   }
+    // } catch (e) {
+    //   setState(() {
+    //     _isLoading = false;
+    //   });
+    //   ScaffoldMessenger.of(context)
+    //       .showSnackBar(SnackBar(content: Text("Error: $e")));
+    // }
   }
 
   @override
@@ -120,7 +121,7 @@ class _AnimatedLoginPageState extends State<AnimatedLoginPage>
                         color: Colors.black26,
                         blurRadius: 10,
                         offset: Offset(0, 5),
-                      )
+                      ),
                     ],
                   ),
                   child: Column(
@@ -129,7 +130,9 @@ class _AnimatedLoginPageState extends State<AnimatedLoginPage>
                       Text(
                         "Login",
                         style: TextStyle(
-                            fontSize: 28, fontWeight: FontWeight.bold),
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       SizedBox(height: 20),
                       TextField(
@@ -176,13 +179,12 @@ class _AnimatedLoginPageState extends State<AnimatedLoginPage>
                         child: ElevatedButton(
                           onPressed: _isLoading ? null : _login,
                           child: _isLoading
-                              ? CircularProgressIndicator(
-                                  color: Colors.white,
-                                )
+                              ? CircularProgressIndicator(color: Colors.white)
                               : Text("Login", style: TextStyle(fontSize: 18)),
                           style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12)),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
                           ),
                         ),
                       ),
